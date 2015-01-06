@@ -1,7 +1,7 @@
 {
-  "name": "pimatic-plugin-template",
-  "description": "The plugin description",
-  "author": "Your Name <you@example.com> (http://your-website)",
+  "name": "pimatic-otgw",
+  "description": "Pimatic plugin for the Opentherm gateway (http://otgw.tclcode.com/)",
+  "author": "Fjux <nickvanalst17@gmail.com> (https://github.com/Fjuxx)",
   "main": "otgw.coffee",
   "files": [
     "otgw.coffee",
