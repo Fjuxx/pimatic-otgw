@@ -7,13 +7,14 @@
     "otgw.coffee",
     "README.md",
     "otgw-config-schema.coffee",
-    "device-config-schema.coffee"
+    "device-config-schema.coffee",
+	"LICENSE"
   ],
-  "version": "0.8.0",
-  "homepage": "http://your-plugin-website",
+  "version": "0.0.1",
+  "homepage": "https://github.com/Fjuxx/pimatic-otgw",
   "repository": {
     "type": "git",
-    "url": "git://github.com/pimatic/pimatic-plugin-template.git"
+    "url": "https://github.com/Fjuxx/pimatic-otgw.git"
   },
   "configSchema": "otgw-config-schema.coffee",
   "dependencies": {

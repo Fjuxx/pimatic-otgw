@@ -39,6 +39,18 @@ server {
 }
 ````
 
+To autostart ot-monitor on boot on the raspberry pi you can use this file:
+https://gist.github.com/Fjuxx/8effac5e0d8338e07265#file-otmonitor-ahf
+
+It assumes ot-monitor is placed in /opt/otmonitor/
+
+place that file in /etc/init.d/
+
+Then execute:
+````
+sudo update-rc.d otmonitor-ahf defaults
+````
+
 Configuration of Pimatic
 -------------
 
