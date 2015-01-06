@@ -1,0 +1,29 @@
+{
+  "name": "pimatic-plugin-template",
+  "description": "The plugin description",
+  "author": "Your Name <you@example.com> (http://your-website)",
+  "main": "otgw.coffee",
+  "files": [
+    "otgw.coffee",
+    "README.md",
+    "otgw-config-schema.coffee",
+    "device-config-schema.coffee"
+  ],
+  "version": "0.8.0",
+  "homepage": "http://your-plugin-website",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/pimatic/pimatic-plugin-template.git"
+  },
+  "configSchema": "otgw-config-schema.coffee",
+  "dependencies": {
+    "OTGW-Control" : "git+https://github.com/Fjuxx/OTGW-Control"
+  },
+  "peerDependencies": {
+    "pimatic": "0.8.* && >=0.8.31"
+  },
+  "engines": {
+    "node": ">0.8.x",
+    "npm": ">1.1.x"
+  }
+}
