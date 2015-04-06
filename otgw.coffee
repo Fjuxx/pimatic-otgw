@@ -95,7 +95,40 @@ module.exports = (env) ->
     attributes:
       Flame:
         description: "Flame status"
-        type: "boolean"   
+        type: "boolean" 
+      CentralHeatingMode:
+        description: "Central Heating Mode"
+        type: "boolean"
+      Fault:
+        description: "Fault indication"
+        type: "boolean"
+      DomesticHotWaterMode:
+        description: "Domestic Hot Water Mode"
+        type: "boolean"
+      CoolingStatus:
+        description: "Cooling Status"
+        type: "boolean"
+      CentralHeating2Mode:
+        description: "Central Heating 2 Mode"
+        type: "boolean"
+      Diagnostics:
+        description: "Diagnostics"
+        type: "boolean"
+      CentralHeatingEnable:
+        description: "Central Heating Enable"
+        type: "boolean"
+      DomesticHotWaterEnable:
+        description: "Domestic Hot Water Enable"
+        type: "boolean"
+      CoolingEnable:
+        description: "Cooling Enable"
+        type: "boolean"
+      OTCState:
+        description: "OTC State"
+        type: "boolean"
+      CentralHeating2Enable:
+        description: "Central Heating 2 Enable"
+        type: "boolean"
 
     constructor: (@config) ->
       @id = @config.id
@@ -103,33 +136,89 @@ module.exports = (env) ->
 
       plugin.otgw.on("flame_status" , (data) =>
         if data.length = 16
-          @_fault = bitToBool(data.slice(14,15))
-          @_chmode = bitToBool(data.slice(13,14))
-          @_dhwmode = bitToBool(data.slice(12,13))
-          _setFlame(bitToBool(data.slice(11,12)))
-          @_coolingstatus = bitToBool(data.slice(10,11))
-          @_ch2mode = bitToBool(data.slice(9,10))
-          @_diag = bitToBool(data.slice(8,9))
-
-          @_chenable = bitToBool(data.slice(7,8))
-          @_dhwenable = bitToBool(data.slice(6,7))
-          @_coolingenable = bitToBool(data.slice(5,6))
-          @_otcstate = bitToBool(data.slice(4,5))
-          @_ch2enable = bitToBool(data.slice(3,4))
+          @_setFault(@_bitToBool(data.slice(15,16)))
+          @_setCHMode(@_bitToBool(data.slice(14,15)))
+          @_setDHWMode(@_bitToBool(data.slice(13,14)))
+          @_setFlame(@_bitToBool(data.slice(12,13)))
+          @_setCoolingStatus(@_bitToBool(data.slice(11,12)))
+          @_setCH2Mode(@_bitToBool(data.slice(10,11)))
+          @_setDiagnostics(@_bitToBool(data.slice(9,10)))
+          @_setCHEnable(@_bitToBool(data.slice(8,9)))
+          @_setDHWEnable(@_bitToBool(data.slice(7,8)))
+          @_setCoolingEnable(@_bitToBool(data.slice(6,7)))
+          @_setOTCState(@_bitToBool(data.slice(5,6)))
+          @_setCH2Enable(@_bitToBool(data.slice(4,5)))
       )
       super()
 
-    getFlame: () ->
-      return Promise.resolve @_flame
+#Getters
+    getFlame: () -> return Promise.resolve @_flame
+    getCentralHeatingMode: () -> return Promise.resolve @_chmode
+    getFault: () -> return Promise.resolve @_fault
+    getDomesticHotWaterMode: () -> return Promise.resolve @_dhwmode
+    getCoolingStatus: () -> return Promise.resolve @_coolingstatus
+    getCentralHeating2Mode: () -> return Promise.resolve @_ch2mode
+    getDiagnostics: () -> return Promise.resolve @_diag
+    getCentralHeatingEnable: () -> return Promise.resolve @_chenable
+    getDomesticHotWaterEnable: () -> return Promise.resolve @_dhwenable
+    getCoolingEnable: () -> return Promise.resolve @_coolingenable
+    getOTCState: () -> return Promise.resolve @_otcstate
+    getCentralHeating2Enable: () -> return Promise.resolve @_ch2enable
 
-    bitToBool: (value) ->
-      return (value is "1")
-
+#Setters
     _setFlame: (state) ->
-      if @_state isnt state
-        @_state = state
+      if @_flame isnt state
+        @_flame = state
         @emit 'Flame', state
-
+    _setCHMode: (state) ->
+      if @_chmode isnt state
+        @_chmode = state
+        @emit 'CentralHeatingMode', state
+    _setFault: (state) ->
+      if @_fault isnt state
+        @_fault = state
+        @emit 'Fault', state
+    _setDHWMode: (state) ->
+      if @_dhwmode isnt state
+        @_dhwmode = state
+        @emit 'DomesticHotWaterMode', state
+    _setCoolingStatus: (state) ->
+      if @_coolingstatus isnt state
+        @_coolingstatus = state
+        @emit 'CoolingStatus', state
+    _setCH2Mode: (state) ->
+      if @_ch2mode isnt state
+        @_ch2mode = state
+        @emit 'CentralHeating2Mode', state
+    _setDiagnostics: (state) ->
+      if @_diag isnt state
+        @_diag = state
+        @emit 'Diagnostics', state
+    _setCHEnable: (state) ->
+      if @_chenable isnt state
+        @_chenable = state
+        @emit 'CentralHeatingEnable', state
+    _setDHWEnable: (state) ->
+      if @_dhwenable isnt state
+        @_dhwenable = state
+        @emit 'DomesticHotWaterEnable', state
+    _setCoolingEnable: (state) ->
+      if @_coolingenable isnt state
+        @_coolingenable = state
+        @emit 'CoolingEnable', state
+    _setOTCState: (state) ->
+      if @_otcstate isnt state
+        @_otcstate = state
+        @emit 'OTCState', state
+    _setCH2Enable: (state) ->
+      if @_ch2enable isnt state
+        @_ch2enable = state
+        @emit 'CentralHeating2Enable', state
+    
+#Functions
+    _bitToBool: (value) ->
+      return (value is "1")
+    
   class OTGWHeatingThermostat extends env.devices.HeatingThermostat
 
     constructor: (@config, lastState) ->

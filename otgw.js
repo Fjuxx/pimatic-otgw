@@ -124,6 +124,50 @@ module.exports = function(env) {
       Flame: {
         description: "Flame status",
         type: "boolean"
+      },
+      CentralHeatingMode: {
+        description: "Central Heating Mode",
+        type: "boolean"
+      },
+      Fault: {
+        description: "Fault indication",
+        type: "boolean"
+      },
+      DomesticHotWaterMode: {
+        description: "Domestic Hot Water Mode",
+        type: "boolean"
+      },
+      CoolingStatus: {
+        description: "Cooling Status",
+        type: "boolean"
+      },
+      CentralHeating2Mode: {
+        description: "Central Heating 2 Mode",
+        type: "boolean"
+      },
+      Diagnostics: {
+        description: "Diagnostics",
+        type: "boolean"
+      },
+      CentralHeatingEnable: {
+        description: "Central Heating Enable",
+        type: "boolean"
+      },
+      DomesticHotWaterEnable: {
+        description: "Domestic Hot Water Enable",
+        type: "boolean"
+      },
+      CoolingEnable: {
+        description: "Cooling Enable",
+        type: "boolean"
+      },
+      OTCState: {
+        description: "OTC State",
+        type: "boolean"
+      },
+      CentralHeating2Enable: {
+        description: "Central Heating 2 Enable",
+        type: "boolean"
       }
     };
 
@@ -134,18 +178,18 @@ module.exports = function(env) {
       plugin.otgw.on("flame_status", (function(_this) {
         return function(data) {
           if (data.length = 16) {
-            _this._fault = bitToBool(data.slice(14, 15));
-            _this._chmode = bitToBool(data.slice(13, 14));
-            _this._dhwmode = bitToBool(data.slice(12, 13));
-            _setFlame(bitToBool(data.slice(11, 12)));
-            _this._coolingstatus = bitToBool(data.slice(10, 11));
-            _this._ch2mode = bitToBool(data.slice(9, 10));
-            _this._diag = bitToBool(data.slice(8, 9));
-            _this._chenable = bitToBool(data.slice(7, 8));
-            _this._dhwenable = bitToBool(data.slice(6, 7));
-            _this._coolingenable = bitToBool(data.slice(5, 6));
-            _this._otcstate = bitToBool(data.slice(4, 5));
-            return _this._ch2enable = bitToBool(data.slice(3, 4));
+            _this._setFault(_this._bitToBool(data.slice(15, 16)));
+            _this._setCHMode(_this._bitToBool(data.slice(14, 15)));
+            _this._setDHWMode(_this._bitToBool(data.slice(13, 14)));
+            _this._setFlame(_this._bitToBool(data.slice(12, 13)));
+            _this._setCoolingStatus(_this._bitToBool(data.slice(11, 12)));
+            _this._setCH2Mode(_this._bitToBool(data.slice(10, 11)));
+            _this._setDiagnostics(_this._bitToBool(data.slice(9, 10)));
+            _this._setCHEnable(_this._bitToBool(data.slice(8, 9)));
+            _this._setDHWEnable(_this._bitToBool(data.slice(7, 8)));
+            _this._setCoolingEnable(_this._bitToBool(data.slice(6, 7)));
+            _this._setOTCState(_this._bitToBool(data.slice(5, 6)));
+            return _this._setCH2Enable(_this._bitToBool(data.slice(4, 5)));
           }
         };
       })(this));
@@ -156,15 +200,136 @@ module.exports = function(env) {
       return Promise.resolve(this._flame);
     };
 
-    OTGWThermostat.prototype.bitToBool = function(value) {
-      return value === "1";
+    OTGWThermostat.prototype.getCentralHeatingMode = function() {
+      return Promise.resolve(this._chmode);
+    };
+
+    OTGWThermostat.prototype.getFault = function() {
+      return Promise.resolve(this._fault);
+    };
+
+    OTGWThermostat.prototype.getDomesticHotWaterMode = function() {
+      return Promise.resolve(this._dhwmode);
+    };
+
+    OTGWThermostat.prototype.getCoolingStatus = function() {
+      return Promise.resolve(this._coolingstatus);
+    };
+
+    OTGWThermostat.prototype.getCentralHeating2Mode = function() {
+      return Promise.resolve(this._ch2mode);
+    };
+
+    OTGWThermostat.prototype.getDiagnostics = function() {
+      return Promise.resolve(this._diag);
+    };
+
+    OTGWThermostat.prototype.getCentralHeatingEnable = function() {
+      return Promise.resolve(this._chenable);
+    };
+
+    OTGWThermostat.prototype.getDomesticHotWaterEnable = function() {
+      return Promise.resolve(this._dhwenable);
+    };
+
+    OTGWThermostat.prototype.getCoolingEnable = function() {
+      return Promise.resolve(this._coolingenable);
+    };
+
+    OTGWThermostat.prototype.getOTCState = function() {
+      return Promise.resolve(this._otcstate);
+    };
+
+    OTGWThermostat.prototype.getCentralHeating2Enable = function() {
+      return Promise.resolve(this._ch2enable);
     };
 
     OTGWThermostat.prototype._setFlame = function(state) {
-      if (this._state !== state) {
-        this._state = state;
+      if (this._flame !== state) {
+        this._flame = state;
         return this.emit('Flame', state);
       }
+    };
+
+    OTGWThermostat.prototype._setCHMode = function(state) {
+      if (this._chmode !== state) {
+        this._chmode = state;
+        return this.emit('CentralHeatingMode', state);
+      }
+    };
+
+    OTGWThermostat.prototype._setFault = function(state) {
+      if (this._fault !== state) {
+        this._fault = state;
+        return this.emit('Fault', state);
+      }
+    };
+
+    OTGWThermostat.prototype._setDHWMode = function(state) {
+      if (this._dhwmode !== state) {
+        this._dhwmode = state;
+        return this.emit('DomesticHotWaterMode', state);
+      }
+    };
+
+    OTGWThermostat.prototype._setCoolingStatus = function(state) {
+      if (this._coolingstatus !== state) {
+        this._coolingstatus = state;
+        return this.emit('CoolingStatus', state);
+      }
+    };
+
+    OTGWThermostat.prototype._setCH2Mode = function(state) {
+      if (this._ch2mode !== state) {
+        this._ch2mode = state;
+        return this.emit('CentralHeating2Mode', state);
+      }
+    };
+
+    OTGWThermostat.prototype._setDiagnostics = function(state) {
+      if (this._diag !== state) {
+        this._diag = state;
+        return this.emit('Diagnostics', state);
+      }
+    };
+
+    OTGWThermostat.prototype._setCHEnable = function(state) {
+      if (this._chenable !== state) {
+        this._chenable = state;
+        return this.emit('CentralHeatingEnable', state);
+      }
+    };
+
+    OTGWThermostat.prototype._setDHWEnable = function(state) {
+      if (this._dhwenable !== state) {
+        this._dhwenable = state;
+        return this.emit('DomesticHotWaterEnable', state);
+      }
+    };
+
+    OTGWThermostat.prototype._setCoolingEnable = function(state) {
+      if (this._coolingenable !== state) {
+        this._coolingenable = state;
+        return this.emit('CoolingEnable', state);
+      }
+    };
+
+    OTGWThermostat.prototype._setOTCState = function(state) {
+      if (this._otcstate !== state) {
+        this._otcstate = state;
+        return this.emit('OTCState', state);
+      }
+    };
+
+    OTGWThermostat.prototype._setCH2Enable = function(state) {
+      if (this._ch2enable !== state) {
+        this._ch2enable = state;
+        return this.emit('CentralHeating2Enable', state);
+      }
+    };
+
+    OTGWThermostat.prototype._bitToBool = function(value) {
+      return value === "1";
     };
 
     return OTGWThermostat;
