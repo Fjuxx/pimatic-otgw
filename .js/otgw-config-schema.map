@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "otgw-config-schema.js",
+  "sourceRoot": "",
+  "sources": [
+    "otgw-config-schema.coffee"
+  ],
+  "names": [],
+  "mappings": "AAAA,MAAM,CAAC,OAAP,GAAiB;AAAA,EACf,KAAA,EAAO,aADQ;AAAA,EAEf,IAAA,EAAM,QAFS;AAAA,EAGf,UAAA,EACE;AAAA,IAAA,IAAA,EACE;AAAA,MAAA,WAAA,EAAa,4BAAb;AAAA,MACA,IAAA,EAAM,QADN;AAAA,MAEA,SAAA,EAAS,WAFT;KADF;AAAA,IAIA,IAAA,EACE;AAAA,MAAA,WAAA,EAAa,oDAAb;AAAA,MACA,IAAA,EAAM,SADN;AAAA,MAEA,SAAA,EAAS,IAFT;KALF;GAJa;CAAjB,CAAA"
+}

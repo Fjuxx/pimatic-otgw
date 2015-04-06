@@ -20,7 +20,7 @@ module.exports = (env) ->
         return
       ).timeout(60000).catch( (error) ->
         env.logger.error "Error on connecting to OTGW relay: #{error.message}"
-        env.logger.debug error.stack
+        env.logger.debug error.stack  
         return
       )
 
@@ -35,7 +35,9 @@ module.exports = (env) ->
       @otgw.on("remote_override_setpoint", (data) =>
         env.logger.debug "got remote_override_setpoint: ", data
       )
-
+      @otgw.on("flame_status" , (data) =>
+        env.logger.debug "Flame status: ", data
+      )
 
 
 

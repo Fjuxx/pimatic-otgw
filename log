@@ -1,0 +1,21 @@
+22:02:32.620 [pimatic-otgw] Flame status:  1000000000
+22:02:35.835 [pimatic-kodi] playing
+22:02:35.836 [pimatic-kodi] onPlay data:  { album: 'Ghosts',
+22:02:35.836 [pimatic-kodi]>  artist: [ 'Higherself, Lauren Mason' ],
+22:02:35.836 [pimatic-kodi]>  title: 'Ghosts - Radio Edit',
+22:02:35.836 [pimatic-kodi]>  track: 1,
+22:02:35.836 [pimatic-kodi]>  type: 'song' }
+22:02:35.837 [pimatic-kodi] Ghosts - Radio Edit
+22:02:35.838 [pimatic-kodi] Received notification: { jsonrpc: '2.0',
+22:02:35.838 [pimatic-kodi]>  method: 'Player.OnPlay',
+22:02:35.838 [pimatic-kodi]>  params: { data: { item: [Object], player: [Object] }, sender: 'xbmc' } }
+22:02:36.627 [pimatic-otgw] got remote_override_setpoint:  20.50
+22:03:13.628 [pimatic-otgw] Flame status:  1100000000
+22:03:17.844 [pimatic-otgw] got remote_override_setpoint:  0.00
+
+22:03:18.639 [pimatic-otgw] Flame status:  1100000010
+
+22:03:38.694 [pimatic-otgw] Flame status:  1100001010
+22:03:59.653 [pimatic-otgw] Flame status:  1000001010
+//Alles uit
+22:04:04.646 [pimatic-otgw] Flame status:  1000000000
