@@ -4,7 +4,7 @@ var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); 
   hasProp = {}.hasOwnProperty;
 
 module.exports = function(env) {
-  var M, OTGWConnection, OTGWHeatingThermostat, OTGWMainThermostat, OTGWThermostat, Promise, _, assert, plugin, settled;
+  var M, OTGWConnection, OTGWHeatingThermostat, OTGWMainThermostat, OTGWThermostat, OTGWThermostatPlugin, Promise, _, assert, plugin, settled;
   Promise = env.require('bluebird');
   assert = env.require('cassert');
   _ = env.require('lodash');
@@ -14,15 +14,15 @@ module.exports = function(env) {
   settled = function(promise) {
     return Promise.settle([promise]);
   };
-  OTGWThermostat = (function(superClass) {
-    extend(OTGWThermostat, superClass);
+  OTGWThermostatPlugin = (function(superClass) {
+    extend(OTGWThermostatPlugin, superClass);
 
-    function OTGWThermostat() {
+    function OTGWThermostatPlugin() {
       this.init = bind(this.init, this);
-      return OTGWThermostat.__super__.constructor.apply(this, arguments);
+      return OTGWThermostatPlugin.__super__.constructor.apply(this, arguments);
     }
 
-    OTGWThermostat.prototype.init = function(app, framework, config1) {
+    OTGWThermostatPlugin.prototype.init = function(app, framework, config1) {
       var deviceConfigDef;
       this.framework = framework;
       this.config = config1;
@@ -64,15 +64,21 @@ module.exports = function(env) {
           return new OTGWHeatingThermostat(config, lastState);
         }
       });
-      return this.framework.deviceManager.registerDeviceClass("OTGWMainThermostat", {
+      this.framework.deviceManager.registerDeviceClass("OTGWMainThermostat", {
         configDef: deviceConfigDef.OTGWMainThermostat,
         createCallback: function(config, lastState) {
           return new OTGWMainThermostat(config, lastState);
         }
       });
+      return this.framework.deviceManager.registerDeviceClass("OTGWThermostat", {
+        configDef: deviceConfigDef.OTGWThermostat,
+        createCallback: function(config) {
+          return new OTGWThermostat(config);
+        }
+      });
     };
 
-    OTGWThermostat.prototype.setTemperatureSetpoint = function(mode, value) {
+    OTGWThermostatPlugin.prototype.setTemperatureSetpoint = function(mode, value) {
       this._lastAction = settled(this._lastAction).then((function(_this) {
         return function() {
           return _this.otgw.setTemperatureAsync(mode, value);
@@ -81,10 +87,89 @@ module.exports = function(env) {
       return this._lastAction;
     };
 
-    return OTGWThermostat;
+    return OTGWThermostatPlugin;
 
   })(env.plugins.Plugin);
-  plugin = new OTGWThermostat;
+  plugin = new OTGWThermostatPlugin;
+  OTGWThermostat = (function(superClass) {
+    var _ch2enable, _ch2mode, _chenable, _chmode, _coolingenable, _coolingstatus, _dhwenable, _dhwmode, _diag, _fault, _flame, _otcstate;
+
+    extend(OTGWThermostat, superClass);
+
+    _fault = false;
+
+    _chmode = false;
+
+    _dhwmode = false;
+
+    _flame = false;
+
+    _coolingstatus = false;
+
+    _ch2mode = false;
+
+    _diag = false;
+
+    _chenable = false;
+
+    _dhwenable = false;
+
+    _coolingenable = false;
+
+    _otcstate = false;
+
+    _ch2enable = false;
+
+    OTGWThermostat.prototype.attributes = {
+      Flame: {
+        description: "Flame status",
+        type: "boolean"
+      }
+    };
+
+    function OTGWThermostat(config1) {
+      this.config = config1;
+      this.id = this.config.id;
+      this.name = this.config.name;
+      plugin.otgw.on("flame_status", (function(_this) {
+        return function(data) {
+          if (data.length = 16) {
+            _this._fault = bitToBool(data.slice(14, 15));
+            _this._chmode = bitToBool(data.slice(13, 14));
+            _this._dhwmode = bitToBool(data.slice(12, 13));
+            _setFlame(bitToBool(data.slice(11, 12)));
+            _this._coolingstatus = bitToBool(data.slice(10, 11));
+            _this._ch2mode = bitToBool(data.slice(9, 10));
+            _this._diag = bitToBool(data.slice(8, 9));
+            _this._chenable = bitToBool(data.slice(7, 8));
+            _this._dhwenable = bitToBool(data.slice(6, 7));
+            _this._coolingenable = bitToBool(data.slice(5, 6));
+            _this._otcstate = bitToBool(data.slice(4, 5));
+            return _this._ch2enable = bitToBool(data.slice(3, 4));
+          }
+        };
+      })(this));
+      OTGWThermostat.__super__.constructor.call(this);
+    }
+
+    OTGWThermostat.prototype.getFlame = function() {
+      return Promise.resolve(this._flame);
+    };
+
+    OTGWThermostat.prototype.bitToBool = function(value) {
+      return value === "1";
+    };
+
+    OTGWThermostat.prototype._setFlame = function(state) {
+      if (this._state !== state) {
+        this._state = state;
+        return this.emit('Flame', state);
+      }
+    };
+
+    return OTGWThermostat;
+
+  })(env.devices.Device);
   OTGWHeatingThermostat = (function(superClass) {
     extend(OTGWHeatingThermostat, superClass);
 

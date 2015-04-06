@@ -30,4 +30,9 @@ module.exports = {
         type: "number"
         default: 17
   }
+  OTGWThermostat: {
+    title: "OTGWThermostat config options"
+    type: "object"
+    properties: {}
+  }
 }

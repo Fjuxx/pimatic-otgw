@@ -8,7 +8,7 @@ module.exports = (env) ->
   M = env.matcher
   settled = (promise) -> Promise.settle([promise])
 
-  class OTGWThermostat extends env.plugins.Plugin
+  class OTGWThermostatPlugin extends env.plugins.Plugin
  
     init: (app, @framework, @config) =>
 
@@ -52,6 +52,11 @@ module.exports = (env) ->
         createCallback: (config, lastState) -> new OTGWMainThermostat(config, lastState)
       })
 
+      @framework.deviceManager.registerDeviceClass("OTGWThermostat", {
+        configDef: deviceConfigDef.OTGWThermostat,
+        createCallback: (config) -> new OTGWThermostat(config)
+      })
+
       # @framework.deviceManager.registerDeviceClass("MaxContactSensor", {
       #   configDef: deviceConfigDef.MaxContactSensor,
       #   createCallback: (config, lastState) -> new MaxContactSensor(config, lastState)
@@ -71,8 +76,60 @@ module.exports = (env) ->
       return @_lastAction
 
 
-  plugin = new OTGWThermostat
+  plugin = new OTGWThermostatPlugin
  
+  class OTGWThermostat extends env.devices.Device
+    _fault = false
+    _chmode = false
+    _dhwmode = false
+    _flame = false
+    _coolingstatus = false
+    _ch2mode = false
+    _diag = false
+    _chenable = false
+    _dhwenable = false
+    _coolingenable = false
+    _otcstate = false
+    _ch2enable = false;
+
+    attributes:
+      Flame:
+        description: "Flame status"
+        type: "boolean"   
+
+    constructor: (@config) ->
+      @id = @config.id
+      @name = @config.name
+
+      plugin.otgw.on("flame_status" , (data) =>
+        if data.length = 16
+          @_fault = bitToBool(data.slice(14,15))
+          @_chmode = bitToBool(data.slice(13,14))
+          @_dhwmode = bitToBool(data.slice(12,13))
+          _setFlame(bitToBool(data.slice(11,12)))
+          @_coolingstatus = bitToBool(data.slice(10,11))
+          @_ch2mode = bitToBool(data.slice(9,10))
+          @_diag = bitToBool(data.slice(8,9))
+
+          @_chenable = bitToBool(data.slice(7,8))
+          @_dhwenable = bitToBool(data.slice(6,7))
+          @_coolingenable = bitToBool(data.slice(5,6))
+          @_otcstate = bitToBool(data.slice(4,5))
+          @_ch2enable = bitToBool(data.slice(3,4))
+      )
+      super()
+
+    getFlame: () ->
+      return Promise.resolve @_flame
+
+    bitToBool: (value) ->
+      return (value is "1")
+
+    _setFlame: (state) ->
+      if @_state isnt state
+        @_state = state
+        @emit 'Flame', state
+
   class OTGWHeatingThermostat extends env.devices.HeatingThermostat
 
     constructor: (@config, lastState) ->
